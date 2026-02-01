@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{web_title}}</title>
+</head>
+<body>
+    <h1>Pengecekan usia berdasarkan tahun lahir</h1>
+    <form method="POST" action="/usia" aria-placeholder="masukkan tahun lahir">
+        <input type="number" name="tahun_lahir"/>
+        <button type="submit">Hitung usia</button>
+    </form>
+    {%if usia_anda is not none %}
+        <p>Usia anda adalah: {{usia_anda}}</p>
+    {% else %}
+        <p>Usia anda adalah: -</p>
+    {% endif %}
+
+    <a href="/">Home Page</a>
+</body>
+</html>
