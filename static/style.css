@@ -56,14 +56,14 @@ button {
 }
 
 button {
-    background-color: #007bff;
+    background-color: #27AE60;
     color: white;
     border: none;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #219451;
 }
 
 /* Results Section */
