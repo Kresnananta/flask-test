@@ -4,6 +4,8 @@ from groq import Groq
 from dotenv import load_dotenv
 from flask import Flask, render_template, request
 from datetime import datetime
+from bs4 import BeautifulSoup
+import requests
 
 load_dotenv()
 
@@ -31,10 +33,38 @@ def ai_call(year):
     except Exception:
         return "Error, gagal mendapatkan data dari AI."
 
+def filtering_news(media_name):
+    class_name = ""
+    element_name = ""
+
+    if media_name == "bbc":
+        element_name = "h2"
+        class_name = "sc-feaf8701-3 eQumHa"
+    elif media_name == "kompas":
+        element_name = "h1"
+        class_name = "hlTitle"
+    elif media_name == "idntimes":
+        element_name = "h1"
+        class_name = "css-x8taim"
+
+    return [element_name, class_name]
+
+
+def scraping_news(media_name, url):
+    response = requests.get(url)
+    element = BeautifulSoup(response.content, 'html.parser')
+    filter = filtering_news(media_name)
+    element_name, class_name = filter[0], filter[1]
+
+    headline = element.find(element_name, class_=class_name)
+    return headline.text
 
 @app.route('/')
 def main():
-    return render_template('index.html')
+    bbc = scraping_news("bbc", "https://www.bbc.com/news")
+    kompas = scraping_news("kompas", "https://www.kompas.com/")
+    idntimes = scraping_news("idntimes", "https://www.idntimes.com/")
+    return render_template('index.html', bbc=bbc, kompas=kompas, idntimes=idntimes)
 
 @app.route('/usia', methods=['GET', 'POST'])
 def cek_usia():
@@ -51,4 +81,4 @@ def cek_usia():
     return render_template('cek_usia.html', usia= None)
     
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True)
